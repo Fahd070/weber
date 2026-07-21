@@ -1,0 +1,231 @@
+@import "tailwindcss";
+
+/*
+ * Weber Design Tokens
+ * Implements DECISIONS.md WD-027–WD-036, WD-129–WD-134 via Tailwind v4's
+ * native @theme mechanism (WD-134) — this file is the single source of
+ * truth for every token; no separate CSS-variables file, no
+ * tailwind.config.ts theme extension.
+ *
+ * Raw values live on :root; @theme inline maps Tailwind's utility
+ * namespaces to those :root variables by reference (not by literal value)
+ * so that a later, more specific rule — here, the Desktop-tier media query
+ * for Display/H1 — can still override them at runtime.
+ *
+ * Three token categories are intentionally NOT declared below because
+ * Tailwind v4's own defaults already match the approved values exactly
+ * (DECISIONS.md WD-134):
+ *   - Spacing (WD-030): Tailwind's default spacing-1..32 already land on
+ *     4/8/12/16/24/32/48/64/96/128px.
+ *   - Breakpoints (WD-034): Tailwind's default md/lg/xl already equal
+ *     768/1024/1280px (Tablet/Laptop/Desktop).
+ *   - Font weights (WD-028): Tailwind's default font-normal/medium/
+ *     semibold/bold already equal 400/500/600/700.
+ */
+
+:root {
+  /* ---- Brand colors (WD-002) ---- */
+  --background: #0b0c0f;
+  --primary: #ffffff;
+  --secondary: #d4d4d8;
+  --accent: #71717a;
+
+  /* ---- Neutral scale (WD-129) — interpolated between Background/Primary ---- */
+  --neutral-950: #0b0c0f; /* = Background */
+  --neutral-900: #1c1d21;
+  --neutral-700: #3a3b40;
+  --neutral-500: #71717a; /* = Accent */
+  --neutral-300: #9a9aa1;
+  --neutral-100: #d4d4d8; /* = Secondary */
+
+  /* ---- Semantic colors (WD-036 roles, WD-130 hex values) ---- */
+  --success: #6fa98a;
+  --warning: #c9a15c;
+  --danger: #c97b72;
+  --information: #7c9fc9;
+  --neutral: #71717a; /* = Accent — no new hue (WD-130) */
+
+  /* ---- Base page / structural roles (aliases of the tokens above — not new
+     hex values; naming follows conventional background/foreground/surface/
+     border slots so components can consume them directly) ---- */
+  --foreground: var(--primary);
+  --muted-foreground: var(--secondary);
+  --surface: var(--neutral-900); /* elevation.1 (WD-132) */
+  --surface-raised: var(--neutral-700); /* elevation.2 (WD-132) */
+  --border: rgba(
+    113,
+    113,
+    122,
+    0.24
+  ); /* Neutral/Accent at low opacity — WD-036's stated border purpose */
+
+  /* ---- Typography scale (WD-027) — mobile-first base values; Display/H1
+     scale up at the Desktop tier only (media query below), every other
+     role stays constant across viewports per WD-027 ---- */
+  --text-display: 2.25rem; /* mobile: 36px */
+  --text-display-leading: 1.1; /* WD-029 tight */
+  --text-h1: 1.875rem; /* mobile: 30px */
+  --text-h1-leading: 1.1; /* WD-029 tight */
+  --text-h2: 1.875rem; /* 30px, constant */
+  --text-h2-leading: 1.25; /* WD-029 snug */
+  --text-h3: 1.5rem; /* 24px, constant */
+  --text-h3-leading: 1.25; /* WD-029 snug */
+  --text-title: 1.25rem; /* 20px, constant */
+  --text-title-leading: 1.25; /* WD-029 snug */
+  --text-subtitle: 1.125rem; /* 18px, constant */
+  --text-subtitle-leading: 1.25; /* WD-029 snug */
+  --text-body: 1rem; /* 16px, constant — WCAG 1.4.8 floor */
+  --text-body-leading: 1.6; /* WD-029 body */
+  --text-caption: 0.8125rem; /* 13px, constant */
+  --text-caption-leading: 1.45; /* WD-029 compact */
+  --text-button: 1rem; /* 16px, constant */
+  --text-button-leading: 1.45; /* WD-029 compact */
+  --text-code: 0.875rem; /* 14px, constant */
+  --text-code-leading: 1.45; /* WD-029 compact */
+
+  /* ---- Border radius (WD-031) — `full` uses Tailwind's built-in rounded-full ---- */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 16px;
+
+  /* ---- Shadow — elevation 0–2 use --surface/--surface-raised + --border
+     instead of a shadow (WD-132); only elevation.3 (Overlay) uses a true
+     box-shadow ---- */
+  --shadow-elevation-3: 0 20px 60px -10px rgba(0, 0, 0, 0.55);
+
+  /* ---- Motion (WD-033) — one concrete value chosen per approved range (WD-134) ---- */
+  --duration-micro: 150ms;
+  --duration-standard: 200ms;
+  --duration-moderate: 350ms;
+  --duration-deliberate: 500ms;
+  --ease-out: cubic-bezier(0, 0, 0.2, 1);
+  --ease-in: cubic-bezier(0.4, 0, 1, 1);
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-linear: linear;
+
+  /* ---- Container widths (WD-035) — generates max-w-reading/standard/wide ---- */
+  --container-reading: 720px;
+  --container-standard: 1152px;
+  --container-wide: 1320px;
+
+  /* ---- z-index scale (WD-133) — sized to approved V1 components only ---- */
+  --z-index-base: 0;
+  --z-index-sticky: 10; /* Header */
+  --z-index-dropdown: 20; /* Select, floating menus */
+  --z-index-overlay: 30; /* Mobile Navigation overlay, Tooltip */
+  --z-index-skip-link: 50; /* Skip Link */
+}
+
+/* Display and H1 reach their Desktop size (WD-027) at the Desktop breakpoint
+   tier (WD-034, ≥1280px / Tailwind's `xl`) and up; every viewport below
+   that uses the mobile-first base values declared above. */
+@media (min-width: 1280px) {
+  :root {
+    --text-display: 3.5rem; /* desktop: 56px */
+    --text-h1: 2.5rem; /* desktop: 40px */
+  }
+}
+
+@theme inline {
+  /* ---- Colors — generates bg-, text-, border-, and fill- utilities ---- */
+  --color-background: var(--background);
+  --color-primary: var(--primary);
+  --color-secondary: var(--secondary);
+  --color-accent: var(--accent);
+
+  --color-neutral-950: var(--neutral-950);
+  --color-neutral-900: var(--neutral-900);
+  --color-neutral-700: var(--neutral-700);
+  --color-neutral-500: var(--neutral-500);
+  --color-neutral-300: var(--neutral-300);
+  --color-neutral-100: var(--neutral-100);
+
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-danger: var(--danger);
+  --color-information: var(--information);
+  --color-neutral: var(--neutral);
+
+  --color-foreground: var(--foreground);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-surface: var(--surface);
+  --color-surface-raised: var(--surface-raised);
+  --color-border: var(--border);
+
+  /* ---- Font family (WD-131) — next/font-loaded Geist, already wired in layout.tsx ---- */
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+
+  /* ---- Typography — generates text-* utilities with paired line-height ---- */
+  --text-display: var(--text-display);
+  --text-display--line-height: var(--text-display-leading);
+  --text-h1: var(--text-h1);
+  --text-h1--line-height: var(--text-h1-leading);
+  --text-h2: var(--text-h2);
+  --text-h2--line-height: var(--text-h2-leading);
+  --text-h3: var(--text-h3);
+  --text-h3--line-height: var(--text-h3-leading);
+  --text-title: var(--text-title);
+  --text-title--line-height: var(--text-title-leading);
+  --text-subtitle: var(--text-subtitle);
+  --text-subtitle--line-height: var(--text-subtitle-leading);
+  --text-body: var(--text-body);
+  --text-body--line-height: var(--text-body-leading);
+  --text-caption: var(--text-caption);
+  --text-caption--line-height: var(--text-caption-leading);
+  --text-button: var(--text-button);
+  --text-button--line-height: var(--text-button-leading);
+  --text-code: var(--text-code);
+  --text-code--line-height: var(--text-code-leading);
+
+  /* ---- Border radius (WD-031) ---- */
+  --radius-sm: var(--radius-sm);
+  --radius-md: var(--radius-md);
+  --radius-lg: var(--radius-lg);
+
+  /* ---- Shadow (WD-032, WD-132) ---- */
+  --shadow-elevation-3: var(--shadow-elevation-3);
+
+  /* ---- Motion (WD-033) ---- */
+  /* Tailwind v4's `duration-<name>` utility resolves its value from the
+     `--transition-duration-*` theme namespace specifically (verified
+     against `node_modules/tailwindcss`'s own utility source — its
+     `duration` utility looks up `["--transition-duration"]`, not
+     `["--duration"]`). Mapping under plain `--duration-*` here (as every
+     other token category in this file maps under its own semantic name)
+     silently generated no utility at all: `duration-micro`/
+     `duration-standard`/`duration-moderate`/`duration-deliberate` have
+     been inert everywhere they're used sitewide, falling back to
+     Tailwind's own built-in 150ms default in every case (Final UX Polish,
+     Project Owner approved, root-caused via computed-style verification
+     showing `duration-standard` and `duration-micro` producing identical
+     150ms transitions). Fixed by mapping to the namespace Tailwind
+     actually reads, while `:root`'s raw values above remain the single
+     source of truth, unchanged. */
+  --transition-duration-micro: var(--duration-micro);
+  --transition-duration-standard: var(--duration-standard);
+  --transition-duration-moderate: var(--duration-moderate);
+  --transition-duration-deliberate: var(--duration-deliberate);
+  --ease-out: var(--ease-out);
+  --ease-in: var(--ease-in);
+  --ease-in-out: var(--ease-in-out);
+  --ease-linear: var(--ease-linear);
+
+  /* ---- Container widths (WD-035) ---- */
+  --container-reading: var(--container-reading);
+  --container-standard: var(--container-standard);
+  --container-wide: var(--container-wide);
+
+  /* ---- z-index (WD-133) ---- */
+  --z-index-base: var(--z-index-base);
+  --z-index-sticky: var(--z-index-sticky);
+  --z-index-dropdown: var(--z-index-dropdown);
+  --z-index-overlay: var(--z-index-overlay);
+  --z-index-skip-link: var(--z-index-skip-link);
+}
+
+body {
+  background: var(--color-background);
+  color: var(--color-foreground);
+  font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+}
