@@ -29,7 +29,7 @@ export async function submitContactForm(
   }
 
   try {
-    await recordContactSubmission(parsed.data);
+    await recordContactSubmission();
     return { success: true };
   } catch {
     return {
@@ -50,13 +50,10 @@ export async function submitContactForm(
  * Wiring either up here would mean inventing infrastructure this task
  * explicitly prohibits. This function is the single, isolated seam where
  * real persistence gets wired in once that destination is decided — until
- * then it records the submission to the server log, per
- * SECURITY_POLICY.md §3's own approved logging principle, which is
- * durable enough to confirm the flow captures real data end-to-end
- * without inventing anything unapproved.
+ * then it records only that a submission occurred, never the submitted
+ * values themselves, per SECURITY_POLICY.md §3's own rule against logging
+ * user-submitted personal information.
  */
-async function recordContactSubmission(
-  values: ContactFormValues,
-): Promise<void> {
-  console.log("[contact] submission received", values);
+async function recordContactSubmission(): Promise<void> {
+  console.log("[contact] submission received");
 }

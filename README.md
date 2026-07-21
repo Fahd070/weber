@@ -12,24 +12,27 @@ Long-term, Weber is intended to grow from a web development company into a broad
 
 This repository is the home of the Weber project: its governing constitution, its documentation system, and — once approved — its application source code.
 
-**Current status:** Study Mode / pre-implementation. The Constitution has been adopted, the documentation system has been established, and the core technology stack has been approved (`docs/DECISIONS.md` WD-014–WD-026 — Next.js, TypeScript, Tailwind CSS, shadcn/ui, PostgreSQL/Prisma, and more; full list in `docs/ARCHITECTURE.md` §0). No application code or UI has been implemented yet, and several categories (hosting, authentication, CMS, and others) remain undecided.
+**Current status:** Version 1 implementation is underway. The Constitution has been adopted, the documentation system has been established, and the core technology stack has been approved (`docs/DECISIONS.md` WD-014–WD-026 — Next.js, TypeScript, Tailwind CSS, shadcn/ui, PostgreSQL/Prisma, and more; full list in `docs/ARCHITECTURE.md` §0). Application code and UI now exist under `src/`; several categories (hosting, authentication, CMS, and others) remain undecided.
 
 ## Folder Structure
 
 ```
 Weber/
 ├── docs/                     Documentation hub (see below)
+├── public/                   Static assets served as-is
+├── src/                      Application source (Next.js App Router)
 ├── weber logo.png             Official brand asset — single source of truth for the logo
 └── README.md                  This file
 ```
 
-An application source tree (e.g., `src/`) does not exist yet — it will be created once a Version 1 implementation phase is planned and approved (see `docs/PROJECT_ROADMAP.md` and `docs/ARCHITECTURE.md`).
-
 ## How to Start the Project
 
-`[PLACEHOLDER — Pending Project Owner Decision]`
+```
+pnpm install
+pnpm dev
+```
 
-There is no application to run yet — the core technology stack is now approved (Next.js/React/TypeScript, Tailwind CSS, shadcn/ui, PostgreSQL/Prisma, and more — see `docs/ARCHITECTURE.md` §0), but no project has been scaffolded, no dependencies installed, and hosting/deployment is still undecided. This section will be completed once an implementation phase is approved.
+Hosting/deployment is still undecided; the above runs the project locally only.
 
 ## Documentation
 
